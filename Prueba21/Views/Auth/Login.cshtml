@@ -9,9 +9,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Hostal Mercedes</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
 
     <style>
         body {
@@ -31,7 +31,6 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
-            transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
         }
 
             .login-container h2 {
@@ -69,28 +68,6 @@
             margin-bottom: 1rem;
         }
 
-        [data-bs-theme="dark"] body {
-            background: linear-gradient(135deg, #343a40, #212529);
-        }
-
-        [data-bs-theme="dark"] .login-container {
-            background: #343a40;
-            color: white;
-            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-        }
-
-            [data-bs-theme="dark"] .login-container h2 {
-                color: white;
-            }
-
-        [data-bs-theme="dark"] .brand {
-            color: #f8f9fa;
-        }
-
-        [data-bs-theme="dark"] .input-group-text {
-            background: #6c757d;
-        }
-
         .theme-toggle {
             position: fixed;
             top: 1rem;
@@ -103,8 +80,10 @@
         }
     </style>
 </head>
+
 <body>
 
+    <!-- BOTÓN DE CAMBIO DE TEMA -->
     <button id="themeToggle" class="theme-toggle">
         <i id="themeIcon" class="fas fa-moon"></i>
     </button>
@@ -115,30 +94,40 @@
         <h2>Iniciar Sesión</h2>
 
         <form asp-action="Login" method="post">
+
+            <!-- EMAIL -->
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                 <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required />
             </div>
 
-            <div class="mb-3 input-group">
+            <!-- PASSWORD + SHOW/HIDE -->
+            <div class="mb-3 input-group position-relative">
                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                <input type="password" name="contrasenia" class="form-control" placeholder="Contraseña" required />
+
+                <input id="PasswordInput" type="password" name="contrasenia"
+                       class="form-control" placeholder="Contraseña" required />
+
+                <button type="button" id="togglePassword"
+                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                               border:none; background:transparent; color:#6c757d;">
+                    <i id="toggleIcon" class="fas fa-eye"></i>
+                </button>
             </div>
 
             <button type="submit" class="btn btn-primary">Ingresar</button>
         </form>
     </div>
 
+
+    <!-- SCRIPT: TEMA + MOSTRAR/OCULTAR CONTRASEÑA -->
     <script>
-                document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /* -------------------- TEMA -------------------- */
             const themeToggle = document.getElementById("themeToggle");
             const themeIcon = document.getElementById("themeIcon");
             const html = document.documentElement;
-
-            if (!themeToggle || !themeIcon) {
-                console.error("No se encontró el botón de cambio de tema.");
-                return;
-            }
 
             let theme = localStorage.getItem("theme") || "light";
             html.setAttribute("data-bs-theme", theme);
@@ -150,8 +139,26 @@
                 localStorage.setItem("theme", newTheme);
                 themeIcon.className = newTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
             });
-        });
 
+
+            /* -------------------- MOSTRAR / OCULTAR CONTRASEÑA -------------------- */
+            const pwdInput = document.getElementById("PasswordInput");
+            const toggleBtn = document.getElementById("togglePassword");
+            const toggleIcon = document.getElementById("toggleIcon");
+
+            toggleBtn.addEventListener("click", () => {
+                const isHidden = pwdInput.type === "password";
+
+                pwdInput.type = isHidden ? "text" : "password";
+                toggleIcon.className = isHidden ? "fas fa-eye-slash" : "fas fa-eye";
+
+                // Mantener cursor al final
+                pwdInput.focus();
+                pwdInput.setSelectionRange(pwdInput.value.length, pwdInput.value.length);
+            });
+
+        });
     </script>
+
 </body>
 </html>
