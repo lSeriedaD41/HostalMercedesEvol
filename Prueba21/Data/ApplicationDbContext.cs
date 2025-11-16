@@ -18,6 +18,11 @@ namespace Prueba21.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Conversión del Enum EstadoHabitacion a STRING
+            modelBuilder.Entity<Habitacion>()
+                .Property(h => h.Estado)
+                .HasConversion<string>();
+
             // Configuración para OrdenConserjeria
             modelBuilder.Entity<OrdenConserjeria>()
                 .HasOne(oc => oc.Habitacion)
@@ -54,122 +59,40 @@ namespace Prueba21.Data
                     sql: "(OrdenReservaId IS NOT NULL) OR (ClienteId IS NOT NULL AND HabitacionId IS NOT NULL)"
                 );
 
+            // SEED: Personal
             modelBuilder.Entity<Personal>().HasData(
                 new Personal
-                    {
-                        PersonalId = 1,
-                        Nombre = "Administrador",
-                        Email = "admin@gmail.com",
-                        Contrasenia = "admin",
-                        Rol = "Administrador"
-                    }
-                );
+                {
+                    PersonalId = 1,
+                    Nombre = "Administrador",
+                    Email = "admin@gmail.com",
+                    Contrasenia = "admin",
+                    Rol = "Administrador"
+                }
+            );
 
+            // SEED: Formas de Pago
             modelBuilder.Entity<FormaDePago>().HasData(
-                    new FormaDePago
-                    {
-                        FormaDePagoId = 1,
-                        Nombre = "Efectivo"
-                    },
-                    new FormaDePago
-                    {
-                        FormaDePagoId = 2,
-                        Nombre = "Tarjeta de Crédito"
-                    },
-                    new FormaDePago
-                    {
-                        FormaDePagoId = 3,
-                        Nombre = "Tarjeta de Débito"
-                    },
-                    new FormaDePago
-                    {
-                        FormaDePagoId = 4,
-                        Nombre = "Transferencia Bancaria"
-                    }
-                );
+                new FormaDePago { FormaDePagoId = 1, Nombre = "Efectivo" },
+                new FormaDePago { FormaDePagoId = 2, Nombre = "Tarjeta de Crédito" },
+                new FormaDePago { FormaDePagoId = 3, Nombre = "Tarjeta de Débito" },
+                new FormaDePago { FormaDePagoId = 4, Nombre = "Transferencia Bancaria" }
+            );
 
+            // SEED: Habitaciones
             modelBuilder.Entity<Habitacion>().HasData(
-                    new Habitacion
-                    {
-                        HabitacionId = 1,
-                        Numero = "101",
-                        Tipo = "Sencilla",
-                        Precio = 100,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 2,
-                        Numero = "102",
-                        Tipo = "Doble",
-                        Precio = 150,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 3,
-                        Numero = "103",
-                        Tipo = "Triple",
-                        Precio = 200,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 4,
-                        Numero = "104",
-                        Tipo = "Suite",
-                        Precio = 300,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 5,
-                        Numero = "105",
-                        Tipo = "Suite Presidencial",
-                        Precio = 500,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 6,
-                        Numero = "106",
-                        Tipo = "Sencilla",
-                        Precio = 100,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 7,
-                        Numero = "107",
-                        Tipo = "Doble",
-                        Precio = 150,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 8,
-                        Numero = "108",
-                        Tipo = "Triple",
-                        Precio = 200,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 9,
-                        Numero = "109",
-                        Tipo = "Suite",
-                        Precio = 300,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    },
-                    new Habitacion
-                    {
-                        HabitacionId = 10,
-                        Numero = "110",
-                        Tipo = "Suite Presidencial",
-                        Precio = 500,
-                        Estado = Habitacion.EstadoHabitacion.Disponible
-                    }
-                );
+                new Habitacion { HabitacionId = 1, Numero = "101", Tipo = "Sencilla", Precio = 100, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 2, Numero = "102", Tipo = "Doble", Precio = 150, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 3, Numero = "103", Tipo = "Triple", Precio = 200, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 4, Numero = "104", Tipo = "Suite", Precio = 300, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 5, Numero = "105", Tipo = "Suite Presidencial", Precio = 500, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 6, Numero = "106", Tipo = "Sencilla", Precio = 100, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 7, Numero = "107", Tipo = "Doble", Precio = 150, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 8, Numero = "108", Tipo = "Triple", Precio = 200, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 9, Numero = "109", Tipo = "Suite", Precio = 300, Estado = Habitacion.EstadoHabitacion.Disponible },
+                new Habitacion { HabitacionId = 10, Numero = "110", Tipo = "Suite Presidencial", Precio = 500, Estado = Habitacion.EstadoHabitacion.Disponible }
+            );
+
             base.OnModelCreating(modelBuilder);
         }
     }

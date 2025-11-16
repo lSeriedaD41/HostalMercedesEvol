@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Prueba21.Models;
 using Prueba21.Service.Interfaces;
-
+using static Prueba21.Models.Habitacion;
 
 [Authorize(Roles = "Administrador,Recepcionista")]
 public class HabitacionController : Controller
@@ -14,11 +14,22 @@ public class HabitacionController : Controller
         _service = service;
     }
 
-    public async Task<IActionResult> Index()
+    // LISTA CON FILTRO POR ESTADO
+    public async Task<IActionResult> Index(EstadoHabitacion? estado)
     {
-        return View(await _service.GetAllAsync());
+        var lista = await _service.GetAllAsync();
+
+        if (estado.HasValue)
+        {
+            lista = lista
+                    .Where(h => h.Estado == estado.Value)
+                    .ToList();
+        }
+
+        return View(lista);
     }
 
+    // DETALLES
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
@@ -29,6 +40,7 @@ public class HabitacionController : Controller
         return View(habitacion);
     }
 
+    // CREAR
     [Authorize(Roles = "Administrador")]
     public IActionResult Create()
     {
@@ -40,14 +52,17 @@ public class HabitacionController : Controller
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Create([Bind("HabitacionId,Numero,Tipo,Precio,Estado")] Habitacion habitacion)
     {
-        if (!ModelState.IsValid) return View(habitacion);
+        if (!ModelState.IsValid)
+            return View(habitacion);
 
         var created = await _service.CreateAsync(habitacion);
-        if (!created) return BadRequest("Error al crear la habitación.");
+        if (!created)
+            return BadRequest("Error al crear la habitación.");
 
         return RedirectToAction(nameof(Index));
     }
 
+    // EDITAR
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Edit(int? id)
     {
@@ -64,15 +79,20 @@ public class HabitacionController : Controller
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Edit(int id, [Bind("HabitacionId,Numero,Tipo,Precio,Estado")] Habitacion habitacion)
     {
-        if (!ModelState.IsValid) return View(habitacion);
+        if (id != habitacion.HabitacionId)
+            return BadRequest("ID inválido.");
+
+        if (!ModelState.IsValid)
+            return View(habitacion);
 
         var updated = await _service.UpdateAsync(id, habitacion);
-        if (!updated) return BadRequest("Error al actualizar la habitación.");
+        if (!updated)
+            return BadRequest("Error al actualizar la habitación.");
 
         return RedirectToAction(nameof(Index));
     }
 
-
+    // ELIMINAR
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Delete(int? id)
     {
@@ -90,15 +110,18 @@ public class HabitacionController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var deleted = await _service.DeleteAsync(id);
-        if (!deleted) return BadRequest("Error al eliminar la habitación.");
+        if (!deleted)
+            return BadRequest("Error al eliminar la habitación.");
 
         return RedirectToAction(nameof(Index));
     }
 
+    // CHECK-OUT (Cambiar estado a Disponible)
     public async Task<IActionResult> CheckOut(int id)
     {
         var checkedOut = await _service.CheckOutAsync(id);
-        if (!checkedOut) return BadRequest("Error al realizar el check-out.");
+        if (!checkedOut)
+            return BadRequest("Error al realizar el check-out.");
 
         return RedirectToAction(nameof(Index));
     }
